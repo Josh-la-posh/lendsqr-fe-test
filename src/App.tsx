@@ -12,7 +12,7 @@ function App() {
         <Route index element={<Login />}/>
         <Route path='/login' element={<Login />} />
         <Route path='/dashboard' element={<Dashboard />} />
-        <Route path='/user' element={<Users />} />
+        <Route path='/user/:id' element={<Users />} />
       </Routes>
     </BrowserRouter>
   );
