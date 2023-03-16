@@ -1,4 +1,10 @@
-export default function Card({ icon, name, amount }) {
+type Props = {
+  icon: string
+  name: string
+  amount: string
+}
+
+export default function Card({ icon, name, amount }: Props) {
   return (
     <div className="card">
       <div className="icon">

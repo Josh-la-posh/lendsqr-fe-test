@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 
-export default function UserPage({ data }) {
-  console.log(data);
+type Parameters = {
+  data: any
+}
+
+export default function UserPage({ data }: Parameters) {
   return (
     <div className="user__container">
       <div className="user">

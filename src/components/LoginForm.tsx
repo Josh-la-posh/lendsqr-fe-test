@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-const [email, setEmail] = useState("");
-const [password, setPassword] = useState("");
-
 export default function LoginForm() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   return (
     <div className="form">
       <div className="form-title">Welcome!</div>
