@@ -5,18 +5,29 @@ import axios from "axios";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import UserPage from "../components/UserPage";
+import Loader from "../components/Loader";
 
 export default function Users() {
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState("");
   let { id } = useParams();
 
-  function getDataById() {
-    axios.get(`${URL}/${id}`).then((response) => setData(response.data));
+  async function getDataById() {
+    await axios
+      .get(`${URL}/${id}`)
+      .then((response) => {
+        setData(response.data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        const err = error.response.data;
+        console.log(err);
+        setIsLoading(false);
+      });
   }
 
   useEffect(() => {
     getDataById();
-    console.log(data);
   }, []);
   return (
     <div className="dashboard">
@@ -25,7 +36,7 @@ export default function Users() {
       </div>
       <div className="dashboard__body">
         <Sidebar />
-        <UserPage data={data} />
+        {isLoading ? <Loader /> : <UserPage data={data} />}
       </div>
     </div>
   );

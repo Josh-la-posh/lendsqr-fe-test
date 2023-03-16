@@ -6,6 +6,7 @@ import moment from "moment";
 import { URL } from "../url";
 import { DropdownForm } from "./Dropdown";
 import { PopupForm } from "./Dropdown";
+import Loader from "./Loader";
 
 // type Parameters = {
 //   value: number;
@@ -37,6 +38,7 @@ import { PopupForm } from "./Dropdown";
 // }
 
 export default function Table() {
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([]);
   const [perPage, setPerPage] = useState(9);
   const [size, setSize] = useState(perPage);
@@ -63,17 +65,17 @@ export default function Table() {
     }
   };
 
-  function getData( current, pageSize) {
+  function getData(current, pageSize) {
     return data.slice((current - 1) * pageSize, current * pageSize);
   }
   // const result = getData(params);
 
-  const PaginationChange = ( page, pageSize ) => {
+  const PaginationChange = (page, pageSize) => {
     setCurrent(page);
     setSize(pageSize);
   };
 
-  const PrevNextArrow = ( current, type, originalElement ) => {
+  const PrevNextArrow = (current, type, originalElement) => {
     if (type === "prev") {
       return (
         <button>
@@ -99,10 +101,18 @@ export default function Table() {
     return originalElement;
   };
 
-  function getDataFromApi() {
-    axios.get(`${URL}`).then(function (response) {
-      setData(response.data);
-    });
+  async function getDataFromApi() {
+    await axios
+      .get(`${URL}`)
+      .then(function (response) {
+        setData(response.data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        const err = error.response.data;
+        console.log(err);
+        setIsLoading(false);
+      });
   }
 
   function optionOpenHandler(id) {
@@ -119,75 +129,83 @@ export default function Table() {
 
   return (
     <div className="mainContent">
-      <div className="tableContainer">
-        <table>
-          <thead>
-            <tr>
-              {headers.map((header, index) => {
-                return (
-                  <th key={index}>
-                    <span className="table__header">
-                      {header}{" "}
-                      <span
-                        className="img"
-                        onClick={() =>
-                          isDropdown === index
-                            ? setIsDropDown(null)
-                            : setIsDropDown(index)
-                        }
-                      >
-                        <img src="../../images/vector.png" alt="" />{" "}
-                        {isDropdown === index && <DropdownForm />}
-                      </span>
-                    </span>
-                  </th>
-                );
-              })}
-            </tr>
-          </thead>
-          <tbody>
-            {data &&
-              getData(current, size).map((data) => {
-                return (
-                  <tr key={data.id}>
-                    <td style={{ textTransform: "capitalize" }}>
-                      <Link to={`/user/${data.id}`}>{data.orgName}</Link>
-                    </td>
-                    <td>{data.userName}</td>
-                    <td>{data.email}</td>
-                    <td>{data.phoneNumber}</td>
-                    <td>
-                      {moment(data.createdAt).format("MMM D, YYYY h:mm a")}
-                    </td>
-                    <td>
-                      <div className="status">
-                        <span className="active">Active</span>{" "}
-                        <span
-                          className="img"
-                          onClick={() => optionOpenHandler(data.id)}
-                        >
-                          <img src="../../images/3dot.png" alt="" />{" "}
-                          {isOptionOpen === data.id && <PopupForm />}
+      {isLoading ? (
+        <div>
+          <Loader />;
+        </div>
+      ) : (
+        <>
+          <div className="tableContainer">
+            <table>
+              <thead>
+                <tr>
+                  {headers.map((header, index) => {
+                    return (
+                      <th key={index}>
+                        <span className="table__header">
+                          {header}{" "}
+                          <span
+                            className="img"
+                            onClick={() =>
+                              isDropdown === index
+                                ? setIsDropDown(null)
+                                : setIsDropDown(index)
+                            }
+                          >
+                            <img src="../../images/vector.png" alt="" />{" "}
+                            {isDropdown === index && <DropdownForm />}
+                          </span>
                         </span>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
-      </div>
-      <Pagination
-        className="pagination-data"
-        showTotal={(total, range) => `Showing ${range[1]} out of ${total}`}
-        onChange={PaginationChange}
-        total={data.length}
-        current={current}
-        pageSize={size}
-        showSizeChanger={false}
-        itemRender={PrevNextArrow}
-        onShowSizeChange={PerPageChange}
-      />
+                      </th>
+                    );
+                  })}
+                </tr>
+              </thead>
+              <tbody>
+                {data &&
+                  getData(current, size).map((data) => {
+                    return (
+                      <tr key={data.id}>
+                        <td style={{ textTransform: "capitalize" }}>
+                          <Link to={`/user/${data.id}`}>{data.orgName}</Link>
+                        </td>
+                        <td>{data.userName}</td>
+                        <td>{data.email}</td>
+                        <td>{data.phoneNumber}</td>
+                        <td>
+                          {moment(data.createdAt).format("MMM D, YYYY h:mm a")}
+                        </td>
+                        <td>
+                          <div className="status">
+                            <span className="active">Active</span>{" "}
+                            <span
+                              className="img"
+                              onClick={() => optionOpenHandler(data.id)}
+                            >
+                              <img src="../../images/3dot.png" alt="" />{" "}
+                              {isOptionOpen === data.id && <PopupForm />}
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          </div>
+          <Pagination
+            className="pagination-data"
+            showTotal={(total, range) => `Showing ${range[1]} out of ${total}`}
+            onChange={PaginationChange}
+            total={data.length}
+            current={current}
+            pageSize={size}
+            showSizeChanger={false}
+            itemRender={PrevNextArrow}
+            onShowSizeChange={PerPageChange}
+          />
+        </>
+      )}
     </div>
   );
 }

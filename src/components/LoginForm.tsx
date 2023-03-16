@@ -1,35 +1,49 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { FC, useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
-export default function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+// interface Props {}
+
+export const LoginForm = () => {
+  const [showPassword, setShowPassWord] = useState(false);
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = () => {
+    navigate("/dashboard");
+  };
+  const handlePasswordVisibility = () => {
+    setShowPassWord(!showPassword);
+  };
 
   return (
-    <div className="form">
+    <form onSubmit={handleSubmit} className="form">
       <div className="form-title">Welcome!</div>
       <div className="form-text">Enter details to login.</div>
-      <input
-        type="email"
-        placeholder="Email"
-        className="form-input"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        className="form-input"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-        minLength={3}
-      />
+      <div className="input">
+        <input
+          type="email"
+          placeholder="Email"
+          className="form-input"
+          required
+        />
+      </div>
+      <div className="input">
+        {password && <span onClick={handlePasswordVisibility}>
+          {showPassword ? "HIDE" : "SHOW"}
+        </span>}
+        <input
+          type={showPassword ? "text" : "password"}
+          placeholder="Password"
+          className="form-input"
+          value={password}
+          onChange={(e)=>setPassword(e.target.value)}
+          required
+          minLength={3}
+        />
+      </div>
       <div className="form-forgotPassword">FORGOT PASSWORD?</div>
-      <Link to="/dashboard">
-        <button className="form-btn btn">LOG IN</button>
-      </Link>
-    </div>
+
+      <button className="form-btn btn">LOG IN</button>
+    </form>
   );
-}
+};

@@ -302,49 +302,67 @@
   }
 }
 
-.form-input {
+.form .input {
+  position: relative;
   width: 27rem;
   height: 3.1rem;
+  margin-bottom: 1.5rem;
   padding-left: 1rem;
   border: 2px solid rgba(84, 95, 125, 0.15);
   border-radius: 5px;
-  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.form .input input {
+  height: 100%;
+  width: calc(100% - 1rem);
+  border: none;
+}
+
+.form .input input:focus {
+  outline: none;
+}
+
+.form .input input::-webkit-input-placeholder {
+  color: #545f7d;
+  opacity: 0.6;
+}
+
+.form .input input:-ms-input-placeholder {
+  color: #545f7d;
+  opacity: 0.6;
+}
+
+.form .input input::-ms-input-placeholder {
+  color: #545f7d;
+  opacity: 0.6;
+}
+
+.form .input input::placeholder {
+  color: #545f7d;
+  opacity: 0.6;
 }
 
 @media only screen and (max-width: 75em) {
-  .form-input {
+  .form .input {
     width: 20rem;
   }
 }
 
 @media only screen and (max-width: 37.5em) {
-  .form-input {
+  .form .input {
     width: 22rem;
   }
 }
 
-.form-input:focus {
-  outline: none;
-}
-
-.form-input::-webkit-input-placeholder {
-  color: #545f7d;
-  opacity: 0.6;
-}
-
-.form-input:-ms-input-placeholder {
-  color: #545f7d;
-  opacity: 0.6;
-}
-
-.form-input::-ms-input-placeholder {
-  color: #545f7d;
-  opacity: 0.6;
-}
-
-.form-input::placeholder {
-  color: #545f7d;
-  opacity: 0.6;
+.form .input span {
+  position: absolute;
+  top: 40%;
+  right: 5%;
+  cursor: pointer;
+  color: #39cdcc;
+  font-weight: 600;
+  font-size: 12px;
 }
 
 .form-forgotPassword {
@@ -394,6 +412,25 @@
 .logo-2 {
   width: 115.37px;
   height: 30px;
+}
+
+.loader {
+  width: 100%;
+  margin-top: 50px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.loader img {
+  width: 50px;
+  height: 50px;
 }
 
 .pagination-data {
